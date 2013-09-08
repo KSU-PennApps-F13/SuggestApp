@@ -7,6 +7,7 @@
 //
 
 #import "PASettingsViewController.h"
+#import <DropboxSDK/DropboxSDK.h>
 
 @interface PASettingsViewController () <UIActionSheetDelegate>
 
@@ -34,6 +35,14 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    if (![[DBSession sharedSession] isLinked]) {
+        self.connectDropboxCell.textLabel.text = @"Connect with Dropbox";
+    } else {
+        self.connectDropboxCell.textLabel.text = @"Connected with Dropbox";
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -48,6 +57,11 @@
                     [self showClearActionSheet];
                     break;
             }
+        case 1:
+            if (![[DBSession sharedSession] isLinked]) {
+                [[DBSession sharedSession] linkFromController:self];
+            }
+            break;
         break;
             
     }

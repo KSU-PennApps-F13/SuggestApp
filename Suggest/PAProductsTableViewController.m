@@ -12,7 +12,7 @@
 #import "AFJSONRequestOperation.h"
 #import "UIImageView+AFNetworking.h"
 
-@interface PAProductsTableViewController ()
+@interface PAProductsTableViewController () <DBRestClientDelegate>
 
 @property (nonatomic, strong) NSMutableString *keywords;
 @property (nonatomic, strong) NSArray *products;
@@ -25,6 +25,7 @@
 @implementation PAProductsTableViewController
 
 @synthesize suggestion = _suggestion;
+@synthesize restClient = _restClient;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -44,6 +45,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    if ([[DBSession sharedSession] isLinked]) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"dropbox-share.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(shareToDropbox)];
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
     [self retrieveProducts];
 }
 
@@ -163,6 +168,7 @@
             if(self.circularProgressView) {
                 [self.circularProgressView removeFromSuperview];
                 self.circularProgressView = nil;
+                self.navigationItem.rightBarButtonItem.enabled = YES;
             }
             
             NSError *error = nil;
@@ -200,10 +206,53 @@
     
     if(self.products.count > 0) {
         [self.tableView reloadData];
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     }
     else {
         [self retrieveInformation];
     }
+}
+
+- (void)shareToDropbox {
+    NSArray *items = [self.products copy];
+    NSMutableString *content = [[NSMutableString alloc] init];
+    for(Product *product in items) {
+        [content appendString:[NSString stringWithFormat:@"%@\n%@\n%@\n\n", product.name, product.link, product.price]];
+    }
+    
+    NSString *documentsDirectory = [NSHomeDirectory()
+                                    stringByAppendingPathComponent:@"Documents"];
+    
+    NSString *filePath = [documentsDirectory
+                          stringByAppendingPathComponent:@"fileArray.txt"];
+    
+    // Write to the file
+    NSError *error = nil;
+    [content writeToFile:filePath atomically:YES
+                    encoding:NSUTF8StringEncoding error:&error];
+    
+    NSString *destDir = @"/";
+    [[self restClient] uploadFile:[NSString stringWithFormat:@"%@.txt", [self.suggestion.facebookName stringByReplacingOccurrencesOfString:@" " withString:@""]] toPath:destDir withParentRev:nil fromPath:filePath];
+}
+
+- (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath
+              from:(NSString*)srcPath metadata:(DBMetadata*)metadata {
+    
+    UIAlertView *dbAlertView = [[UIAlertView alloc] initWithTitle:@"Awesome!" message:@"File was uploaded to Dropbox!" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [dbAlertView show];
+}
+
+- (void)restClient:(DBRestClient*)client uploadFileFailedWithError:(NSError*)error {
+    NSLog(@"File upload failed with error - %@", error);
+}
+
+- (DBRestClient *)restClient {
+    if (!_restClient) {
+        _restClient =
+        [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
+        _restClient.delegate = self;
+    }
+    return _restClient;
 }
 
 @end

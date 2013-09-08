@@ -10,4 +10,6 @@
 
 @interface PASettingsViewController : UITableViewController
 
+@property (strong, nonatomic) IBOutlet UITableViewCell *connectDropboxCell;
+
 @end

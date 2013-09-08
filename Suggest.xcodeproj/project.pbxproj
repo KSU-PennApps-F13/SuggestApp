@@ -55,6 +55,9 @@
 		41325BBC17DC84A50010F16A /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41325BBB17DC84A50010F16A /* Social.framework */; };
 		41325BBF17DC857B0010F16A /* facebook-login.png in Resources */ = {isa = PBXBuildFile; fileRef = 41325BBD17DC857B0010F16A /* facebook-login.png */; };
 		41325BC017DC857B0010F16A /* facebook-login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 41325BBE17DC857B0010F16A /* facebook-login@2x.png */; };
+		41325BC217DC87780010F16A /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41325BC117DC87780010F16A /* DropboxSDK.framework */; };
+		41325BC517DC8D2F0010F16A /* dropbox-share.png in Resources */ = {isa = PBXBuildFile; fileRef = 41325BC317DC8D2F0010F16A /* dropbox-share.png */; };
+		41325BC617DC8D2F0010F16A /* dropbox-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 41325BC417DC8D2F0010F16A /* dropbox-share@2x.png */; };
 		416D615617DB51FE003B6726 /* LeagueScriptNumberOne.otf in Resources */ = {isa = PBXBuildFile; fileRef = 416D614717DB51FE003B6726 /* LeagueScriptNumberOne.otf */; };
 		416D615717DB51FE003B6726 /* Sail-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 416D614817DB51FE003B6726 /* Sail-Regular.otf */; };
 		416D615817DB51FE003B6726 /* AppIcon60x60.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D614A17DB51FE003B6726 /* AppIcon60x60.png */; };
@@ -175,6 +178,9 @@
 		41325BBB17DC84A50010F16A /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		41325BBD17DC857B0010F16A /* facebook-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook-login.png"; sourceTree = "<group>"; };
 		41325BBE17DC857B0010F16A /* facebook-login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook-login@2x.png"; sourceTree = "<group>"; };
+		41325BC117DC87780010F16A /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
+		41325BC317DC8D2F0010F16A /* dropbox-share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dropbox-share.png"; sourceTree = "<group>"; };
+		41325BC417DC8D2F0010F16A /* dropbox-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dropbox-share@2x.png"; sourceTree = "<group>"; };
 		416D614717DB51FE003B6726 /* LeagueScriptNumberOne.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LeagueScriptNumberOne.otf; sourceTree = "<group>"; };
 		416D614817DB51FE003B6726 /* Sail-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sail-Regular.otf"; sourceTree = "<group>"; };
 		416D614A17DB51FE003B6726 /* AppIcon60x60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIcon60x60.png; sourceTree = "<group>"; };
@@ -239,6 +245,7 @@
 				417D368A17DABB9F00FAD506 /* CoreGraphics.framework in Frameworks */,
 				417D36BD17DABBC100FAD506 /* FacebookSDK.framework in Frameworks */,
 				417D368C17DABB9F00FAD506 /* UIKit.framework in Frameworks */,
+				41325BC217DC87780010F16A /* DropboxSDK.framework in Frameworks */,
 				417D368817DABB9F00FAD506 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -368,6 +375,8 @@
 		416D614917DB51FE003B6726 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				41325BC317DC8D2F0010F16A /* dropbox-share.png */,
+				41325BC417DC8D2F0010F16A /* dropbox-share@2x.png */,
 				41A5F5D617DC23B200142279 /* suggestions.png */,
 				41A5F5D717DC23B200142279 /* suggestions@2x.png */,
 				41A5F5D217DC232F00142279 /* settings.png */,
@@ -408,6 +417,7 @@
 		417D368617DABB9F00FAD506 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				41325BC117DC87780010F16A /* DropboxSDK.framework */,
 				41325BBB17DC84A50010F16A /* Social.framework */,
 				41325B8117DC70AC0010F16A /* MobileCoreServices.framework */,
 				41325B7F17DC70A40010F16A /* SystemConfiguration.framework */,
@@ -609,11 +619,13 @@
 				416D615617DB51FE003B6726 /* LeagueScriptNumberOne.otf in Resources */,
 				41325BB117DC83750010F16A /* more copy.png in Resources */,
 				41325BB317DC83750010F16A /* pinterest copy.png in Resources */,
+				41325BC517DC8D2F0010F16A /* dropbox-share.png in Resources */,
 				41325BA517DC83750010F16A /* close.png in Resources */,
 				41325BB917DC83750010F16A /* twitter@2x copy.png in Resources */,
 				41325BAA17DC83750010F16A /* evernote@2x.png in Resources */,
 				41325BAD17DC83750010F16A /* google_drive.png in Resources */,
 				416D618C17DBB165003B6726 /* add@2x.png in Resources */,
+				41325BC617DC8D2F0010F16A /* dropbox-share@2x.png in Resources */,
 				41A5F5D817DC23B200142279 /* suggestions.png in Resources */,
 				41325BB417DC83750010F16A /* pinterest.png in Resources */,
 				41325BA717DC83750010F16A /* dropbox.png in Resources */,

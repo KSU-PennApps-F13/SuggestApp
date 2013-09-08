@@ -8,6 +8,7 @@
 
 #import "PAAppDelegate.h"
 #import <FacebookSDK/FacebookSDK.h>
+#import <DropboxSDK/DropboxSDK.h>
 
 @interface PAAppDelegate ()
 
@@ -32,6 +33,14 @@
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
         [self openSession];
     }
+    
+    DBSession* dbSession =
+    [[DBSession alloc]
+      initWithAppKey:@"7keyj3cfwrrmuvs"
+      appSecret:@"y9sbvpbf4ozjw7e"
+      root:kDBRootAppFolder];
+    [DBSession setSharedSession:dbSession];
+    
     return YES;
 }
 							
@@ -109,12 +118,33 @@
     [self.window makeKeyAndVisible];
 }
 
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    if ([[DBSession sharedSession] handleOpenURL:url]) {
+        if ([[DBSession sharedSession] isLinked]) {
+            NSLog(@"App linked successfully!");
+            // At this point you can start making API calls
+        }
+        return YES;
+    }
+    // Add whatever other url handling code your app requires here
+    return NO;
+}
+
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation
 {
-    return [FBSession.activeSession handleOpenURL:url];
+    if ([[DBSession sharedSession] handleOpenURL:url]) {
+        if ([[DBSession sharedSession] isLinked]) {
+            NSLog(@"App linked successfully!");
+            // At this point you can start making API calls
+        }
+        return YES;
+    }
+    else {
+        return [FBSession.activeSession handleOpenURL:url];
+    }
 }
 
 - (void)saveContext

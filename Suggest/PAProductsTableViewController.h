@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <DropboxSDK/DropboxSDK.h>
 #import "Product.h"
 #import "Suggestion.h"
 
 @interface PAProductsTableViewController : UITableViewController
 
 @property (nonatomic, strong) Suggestion *suggestion;
+@property (nonatomic, readonly) DBRestClient *restClient;
 
 @end
