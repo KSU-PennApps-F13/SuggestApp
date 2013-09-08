@@ -8,6 +8,8 @@
 
 #import "PASelectFriendViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
+#import "UIImageView+AFNetworking.h"
+#import "CFShareCircleView.h"
 
 @interface PASelectFriendViewController () <UISearchDisplayDelegate>
 
@@ -76,6 +78,20 @@
     }
     
     cell.textLabel.text = friend.name;
+    __weak UITableViewCell *weakCell = cell;
+    [cell.imageView setImageWithURLRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:friend[@"picture"][@"data"][@"url"]]]
+                          placeholderImage:nil
+                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image){
+                                       weakCell.imageView.image = image;
+                                       
+                                       //only required if no placeholder is set to force the imageview on the cell to be laid out to house the new image.
+                                       if(weakCell.imageView.frame.size.height==0 || weakCell.imageView.frame.size.width==0 ){
+                                           [weakCell setNeedsLayout];
+                                       }
+                                   }
+                                   failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error){
+                                       
+                                   }];
     
     return cell;
 }
@@ -103,7 +119,7 @@
 
 - (void)populateFriends {
     if (FBSession.activeSession.isOpen) {
-        FBRequest *friendRequest = [FBRequest requestForGraphPath:@"me/friends?fields=name,profile_picture"];
+        FBRequest *friendRequest = [FBRequest requestForGraphPath:@"me/friends?fields=name,picture.width(140).height(140)"];
         [friendRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             if (!error) {
                 self.friends = [(NSArray *)[result objectForKey:@"data"] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {

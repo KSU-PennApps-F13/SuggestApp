@@ -51,7 +51,7 @@
 #pragma mark - Table view delegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 80.0f;
+    return 85.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -107,7 +107,7 @@
     }
     
     Suggestion *suggestion = [self.suggestions objectAtIndex:[indexPath row]];
-    
+    cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
     cell.textLabel.text = suggestion.facebookName;
     if(suggestion.created) {
         TTTTimeIntervalFormatter *timeIntervalFormatter = [[TTTTimeIntervalFormatter alloc] init];
@@ -117,8 +117,8 @@
     }
     
     if (suggestion.facebookPicture) {
-        cell.imageView.image = [UIImage imageWithData:suggestion.facebookPicture];
-        cell.imageView.layer.cornerRadius = cell.imageView.image.size.width / 2.0;
+        cell.imageView.image = [[UIImage alloc] initWithData:suggestion.facebookPicture scale:[[UIScreen mainScreen] scale]];
+        cell.imageView.layer.cornerRadius = 37.0;
         cell.imageView.layer.masksToBounds = YES;
     } else {
         cell.imageView.image = nil;
@@ -132,8 +132,8 @@
                 if (![[self managedObjectContext] save:&error]) {
                     NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
                 }
-                cell.imageView.image = [UIImage imageWithData:imageData];
-                cell.imageView.layer.cornerRadius = cell.imageView.image.size.width / 2.0;
+                cell.imageView.image = [[UIImage alloc] initWithData:imageData scale:[[UIScreen mainScreen] scale]];
+                cell.imageView.layer.cornerRadius = 37.0;
                 cell.imageView.layer.masksToBounds = YES;
                 [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
             });
@@ -159,7 +159,7 @@
     Suggestion *suggestion = [NSEntityDescription insertNewObjectForEntityForName:@"Suggestion" inManagedObjectContext:context];
     [suggestion setValue:selectedFriend[@"name"] forKey:@"facebookName"];
     [suggestion setValue:selectedFriend[@"id"] forKey:@"facebookId"];
-    [suggestion setValue:selectedFriend[@"profile_picture"][@"data"][@"url"] forKey:@"facebookPictureURL"];
+    [suggestion setValue:selectedFriend[@"picture"][@"data"][@"url"] forKey:@"facebookPictureURL"];
     
     NSError *error = nil;
     // Save the object to persistent store

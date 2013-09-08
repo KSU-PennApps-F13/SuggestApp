@@ -83,7 +83,6 @@
     }
     
     Product *product = [self.products objectAtIndex:indexPath.row];
-    [cell.imageView setImageWithURL:[NSURL URLWithString:product.imageURL]];
     cell.imageView.layer.cornerRadius = 4.0;
     cell.imageView.layer.masksToBounds = YES;
     cell.textLabel.text = product.name;
@@ -92,6 +91,20 @@
     [currencyStyle setNumberStyle:NSNumberFormatterCurrencyStyle];
     NSString *formatted = [currencyStyle stringFromNumber:product.price];
     cell.detailTextLabel.text = formatted;
+    __weak UITableViewCell *weakCell = cell;
+    [cell.imageView setImageWithURLRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:product.imageURL]]
+                          placeholderImage:nil
+                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image){
+                                       weakCell.imageView.image = image;
+                                       
+                                       //only required if no placeholder is set to force the imageview on the cell to be laid out to house the new image.
+                                       if(weakCell.imageView.frame.size.height==0 || weakCell.imageView.frame.size.width==0 ){
+                                           [weakCell setNeedsLayout];
+                                       }
+                                   }
+                                   failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error){
+                                       
+                                   }];
     
     return cell;
 }
@@ -106,7 +119,7 @@
     self.circularProgressView = [[FFCircularProgressView alloc] initWithFrame:CGRectMake(0, 0, 50.0, 50.0)];
     self.circularProgressView.center = CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.bounds));
     [self.tableView addSubview:self.circularProgressView];
-    [self.circularProgressView startSpinProgressBackgroundLayer];    
+    [self.circularProgressView startSpinProgressBackgroundLayer];
     
     if (FBSession.activeSession.isOpen) {
         FBRequest *friendRequest = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@%@", self.suggestion.facebookId, @"?fields=likes"]];

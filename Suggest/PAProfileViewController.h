@@ -21,5 +21,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *numSuggestionsLabel;
 @property (strong, nonatomic) IBOutlet UILabel *numUpcomingBirthdaysLabel;
 @property (strong, nonatomic) IBOutlet UILabel *numFriendsLabel;
+- (IBAction)shareButtonClicked:(id)sender;
 
 @end

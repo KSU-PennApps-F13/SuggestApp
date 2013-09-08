@@ -8,10 +8,14 @@
 
 #import <FacebookSDK/FacebookSDK.h>
 #import "PAProfileViewController.h"
+#import "CFShareCircleView.h"
+#import "CFSharer.h"
+#import <Social/Social.h>
 
-@interface PAProfileViewController ()
+@interface PAProfileViewController () <CFShareCircleViewDelegate>
 
 @property (nonatomic, strong) FBGraphObject *user;
+@property (nonatomic, strong) CFShareCircleView *shareCircleView;
 
 @end
 
@@ -37,7 +41,8 @@
     [self populateProfilePicture];
     [self popualteBirthdays];
     [self populateFriends];
-    self.informationView.contentSize = self.informationView.frame.size;
+    self.shareCircleView = [[CFShareCircleView alloc] initWithSharers:@[[CFSharer facebook], [CFSharer twitter]]];
+    self.shareCircleView.delegate = self;
     
 #ifdef SCREENSHOTMODE
     self.navigationItem.leftBarButtonItem = nil;
@@ -187,4 +192,23 @@
     return context;
 }
 
+- (IBAction)shareButtonClicked:(id)sender {
+    [self.shareCircleView show];
+}
+
+- (void)shareCircleView:(CFShareCircleView *)shareCircleView didSelectSharer:(CFSharer *)sharer {
+    if([sharer.name isEqualToString:@"Facebook"]) {
+        SLComposeViewController *viewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+        [viewController setInitialText:@"@Suggest makes it easy to discover and pick great gifts for your friends and family!"];
+        [self presentViewController:viewController animated:YES completion:nil];
+    } else {
+        SLComposeViewController *viewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+        [viewController setInitialText:@"@Suggest makes it easy to discover and pick great gifts for your friends and family!"];
+        [self presentViewController:viewController animated:YES completion:nil];
+    }
+}
+
+- (void)shareCircleCanceled:(NSNotification *)notification{
+    NSLog(@"Share circle view was canceled.");
+}
 @end
