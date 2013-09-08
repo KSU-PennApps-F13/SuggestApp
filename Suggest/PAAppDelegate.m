@@ -19,10 +19,10 @@
 {
     // Override point for customization after application launch.
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:189.0/255.0 green:35.0/255.0 blue:43.0/255.0 alpha:1.0]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:217.0/255.0 green:41.0/255.0 blue:50.0/255.0 alpha:1.0]];
     NSDictionary *textTitleOptions = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil];
     [[UINavigationBar appearance] setTitleTextAttributes:textTitleOptions];
-    [[UITabBar appearance] setTintColor:[UIColor colorWithRed:189.0/255.0 green:35.0/255.0 blue:43.0/255.0 alpha:1.0]];
+    [[UITabBar appearance] setTintColor:[UIColor colorWithRed:217.0/255.0 green:41.0/255.0 blue:50.0/255.0 alpha:1.0]];
     
     // See if the app has a valid token for the current state.
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {

@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PASuggestViewController : UIViewController
+@interface PASuggestViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
-@property (strong, nonatomic) IBOutlet UIButton *pickFriendButton;
-- (IBAction)pickFriendButtonClicked:(id)sender;
+@property (strong, nonatomic) IBOutlet UIView *emptyView;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+- (IBAction)createSuggestionButtonClicked:(id)sender;
 
 @end

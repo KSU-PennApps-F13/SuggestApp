@@ -15,6 +15,9 @@
 
 @implementation PAProfileViewController
 
+// Uncomment to take a screenshot for the launch image
+//#define SCREENSHOTMODE
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -30,7 +33,34 @@
 	// Do any additional setup after loading the view.
     [self populateInformation];
     [self populateProfilePicture];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+#ifdef SCREENSHOTMODE
+    self.navigationItem.leftBarButtonItem = nil;
+    self.navigationItem.rightBarButtonItem = nil;
+    self.navigationController.view.backgroundColor = [UIColor whiteColor];
+    self.title = @"";
+    self.tabBarController.tabBar.selectionIndicatorImage = [[UIImage alloc] init];
+    for (UIView *aView in self.view.subviews) {
+        if ([aView isKindOfClass:[UILabel class]]) {
+            [(UILabel *)aView setText:nil];
+        }
+        else if ([aView isKindOfClass:[UITableView class]]) {
+            [(UITableView *)aView setDataSource:nil];
+        }
+        else if ([aView isKindOfClass:[UIToolbar class]]) {
+            [(UIToolbar *)aView setItems:nil];
+        }
+        else if ([aView isKindOfClass:[UIImageView class]]) {
+            [(UIImageView *)aView setImage:nil];
+        } else {
+            aView.hidden = YES;
+        }
+    }
+    for(UITabBarItem *item in self.tabBarController.tabBar.items) {
+        item.image = nil;
+        item.title = @"";
+    }
+#endif
 }
 
 - (void)didReceiveMemoryWarning

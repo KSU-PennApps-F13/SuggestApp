@@ -15,8 +15,6 @@
 		416D615B17DB51FE003B6726 /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D614D17DB51FE003B6726 /* background@2x.png */; };
 		416D615C17DB51FE003B6726 /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D614E17DB51FE003B6726 /* facebook.png */; };
 		416D615D17DB51FE003B6726 /* facebook@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D614F17DB51FE003B6726 /* facebook@2x.png */; };
-		416D615E17DB51FE003B6726 /* friends.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D615017DB51FE003B6726 /* friends.png */; };
-		416D615F17DB51FE003B6726 /* friends@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D615117DB51FE003B6726 /* friends@2x.png */; };
 		416D616017DB51FE003B6726 /* profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D615217DB51FE003B6726 /* profile.png */; };
 		416D616117DB51FE003B6726 /* profile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D615317DB51FE003B6726 /* profile@2x.png */; };
 		416D616217DB51FE003B6726 /* suggestion.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D615417DB51FE003B6726 /* suggestion.png */; };
@@ -25,13 +23,16 @@
 		416D617217DB5212003B6726 /* PAAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 416D616617DB5212003B6726 /* PAAppDelegate.m */; };
 		416D617317DB5212003B6726 /* PAProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 416D616817DB5212003B6726 /* PAProfileViewController.m */; };
 		416D617417DB5212003B6726 /* PASelectFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 416D616A17DB5212003B6726 /* PASelectFriendViewController.m */; };
-		416D617517DB5212003B6726 /* PASuggestionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 416D616C17DB5212003B6726 /* PASuggestionsViewController.m */; };
 		416D617617DB5212003B6726 /* PASuggestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 416D616E17DB5212003B6726 /* PASuggestViewController.m */; };
 		416D617717DB5212003B6726 /* PAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 416D617017DB5212003B6726 /* PAViewController.m */; };
 		416D617E17DB52D8003B6726 /* main.m in Resources */ = {isa = PBXBuildFile; fileRef = 416D616417DB5212003B6726 /* main.m */; };
 		416D617F17DB5319003B6726 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 416D617A17DB5269003B6726 /* Main.storyboard */; };
 		416D618217DB538A003B6726 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 416D618017DB538A003B6726 /* InfoPlist.strings */; };
 		416D618417DB539C003B6726 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 416D618317DB539C003B6726 /* Images.xcassets */; };
+		416D618717DBAD15003B6726 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D618517DBAD15003B6726 /* history.png */; };
+		416D618817DBAD15003B6726 /* history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D618617DBAD15003B6726 /* history@2x.png */; };
+		416D618B17DBB165003B6726 /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D618917DBB165003B6726 /* add.png */; };
+		416D618C17DBB165003B6726 /* add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 416D618A17DBB165003B6726 /* add@2x.png */; };
 		417D368817DABB9F00FAD506 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 417D368717DABB9F00FAD506 /* Foundation.framework */; };
 		417D368A17DABB9F00FAD506 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 417D368917DABB9F00FAD506 /* CoreGraphics.framework */; };
 		417D368C17DABB9F00FAD506 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 417D368B17DABB9F00FAD506 /* UIKit.framework */; };
@@ -39,6 +40,10 @@
 		417D36A817DABB9F00FAD506 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 417D368717DABB9F00FAD506 /* Foundation.framework */; };
 		417D36A917DABB9F00FAD506 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 417D368B17DABB9F00FAD506 /* UIKit.framework */; };
 		417D36BD17DABBC100FAD506 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 417D36BC17DABBC100FAD506 /* FacebookSDK.framework */; };
+		41941BEF17DBC50500875F53 /* FFCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41941BEE17DBC50500875F53 /* FFCircularProgressView.m */; };
+		41941BF117DBC52F00875F53 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41941BF017DBC52F00875F53 /* QuartzCore.framework */; };
+		41A5F5AC17DBE30B00142279 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 41A5F5AB17DBE30B00142279 /* Default-568h@2x.png */; };
+		41A5F5B217DBF27E00142279 /* PAProductsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 41A5F5B117DBF27E00142279 /* PAProductsTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,8 +65,6 @@
 		416D614D17DB51FE003B6726 /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
 		416D614E17DB51FE003B6726 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
 		416D614F17DB51FE003B6726 /* facebook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook@2x.png"; sourceTree = "<group>"; };
-		416D615017DB51FE003B6726 /* friends.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends.png; sourceTree = "<group>"; };
-		416D615117DB51FE003B6726 /* friends@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "friends@2x.png"; sourceTree = "<group>"; };
 		416D615217DB51FE003B6726 /* profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile.png; sourceTree = "<group>"; };
 		416D615317DB51FE003B6726 /* profile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "profile@2x.png"; sourceTree = "<group>"; };
 		416D615417DB51FE003B6726 /* suggestion.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = suggestion.png; sourceTree = "<group>"; };
@@ -73,8 +76,6 @@
 		416D616817DB5212003B6726 /* PAProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PAProfileViewController.m; path = Suggest/PAProfileViewController.m; sourceTree = SOURCE_ROOT; };
 		416D616917DB5212003B6726 /* PASelectFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PASelectFriendViewController.h; path = Suggest/PASelectFriendViewController.h; sourceTree = SOURCE_ROOT; };
 		416D616A17DB5212003B6726 /* PASelectFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PASelectFriendViewController.m; path = Suggest/PASelectFriendViewController.m; sourceTree = SOURCE_ROOT; };
-		416D616B17DB5212003B6726 /* PASuggestionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PASuggestionsViewController.h; path = Suggest/PASuggestionsViewController.h; sourceTree = SOURCE_ROOT; };
-		416D616C17DB5212003B6726 /* PASuggestionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PASuggestionsViewController.m; path = Suggest/PASuggestionsViewController.m; sourceTree = SOURCE_ROOT; };
 		416D616D17DB5212003B6726 /* PASuggestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PASuggestViewController.h; path = Suggest/PASuggestViewController.h; sourceTree = SOURCE_ROOT; };
 		416D616E17DB5212003B6726 /* PASuggestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PASuggestViewController.m; path = Suggest/PASuggestViewController.m; sourceTree = SOURCE_ROOT; };
 		416D616F17DB5212003B6726 /* PAViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PAViewController.h; path = Suggest/PAViewController.h; sourceTree = SOURCE_ROOT; };
@@ -84,6 +85,10 @@
 		416D617B17DB5269003B6726 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Suggest/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
 		416D618117DB538A003B6726 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Suggest/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		416D618317DB539C003B6726 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Suggest/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		416D618517DBAD15003B6726 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = history.png; sourceTree = "<group>"; };
+		416D618617DBAD15003B6726 /* history@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "history@2x.png"; sourceTree = "<group>"; };
+		416D618917DBB165003B6726 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
+		416D618A17DBB165003B6726 /* add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@2x.png"; sourceTree = "<group>"; };
 		417D368417DABB9F00FAD506 /* Suggest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Suggest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		417D368717DABB9F00FAD506 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		417D368917DABB9F00FAD506 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -91,6 +96,12 @@
 		417D36A517DABB9F00FAD506 /* SuggestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SuggestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		417D36A617DABB9F00FAD506 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		417D36BC17DABBC100FAD506 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		41941BED17DBC50500875F53 /* FFCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFCircularProgressView.h; sourceTree = "<group>"; };
+		41941BEE17DBC50500875F53 /* FFCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFCircularProgressView.m; sourceTree = "<group>"; };
+		41941BF017DBC52F00875F53 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		41A5F5AB17DBE30B00142279 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		41A5F5B017DBF27E00142279 /* PAProductsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PAProductsTableViewController.h; path = Suggest/PAProductsTableViewController.h; sourceTree = SOURCE_ROOT; };
+		41A5F5B117DBF27E00142279 /* PAProductsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PAProductsTableViewController.m; path = Suggest/PAProductsTableViewController.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41941BF117DBC52F00875F53 /* QuartzCore.framework in Frameworks */,
 				417D368A17DABB9F00FAD506 /* CoreGraphics.framework in Frameworks */,
 				417D36BD17DABBC100FAD506 /* FacebookSDK.framework in Frameworks */,
 				417D368C17DABB9F00FAD506 /* UIKit.framework in Frameworks */,
@@ -140,14 +152,17 @@
 		416D614917DB51FE003B6726 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				41A5F5AB17DBE30B00142279 /* Default-568h@2x.png */,
+				416D618917DBB165003B6726 /* add.png */,
+				416D618A17DBB165003B6726 /* add@2x.png */,
+				416D618517DBAD15003B6726 /* history.png */,
+				416D618617DBAD15003B6726 /* history@2x.png */,
 				416D614A17DB51FE003B6726 /* AppIcon60x60.png */,
 				416D614B17DB51FE003B6726 /* AppIcon60x60@2x.png */,
 				416D614C17DB51FE003B6726 /* background.png */,
 				416D614D17DB51FE003B6726 /* background@2x.png */,
 				416D614E17DB51FE003B6726 /* facebook.png */,
 				416D614F17DB51FE003B6726 /* facebook@2x.png */,
-				416D615017DB51FE003B6726 /* friends.png */,
-				416D615117DB51FE003B6726 /* friends@2x.png */,
 				416D615217DB51FE003B6726 /* profile.png */,
 				416D615317DB51FE003B6726 /* profile@2x.png */,
 				416D615417DB51FE003B6726 /* suggestion.png */,
@@ -177,6 +192,7 @@
 		417D368617DABB9F00FAD506 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				41941BF017DBC52F00875F53 /* QuartzCore.framework */,
 				417D36BC17DABBC100FAD506 /* FacebookSDK.framework */,
 				417D368717DABB9F00FAD506 /* Foundation.framework */,
 				417D368917DABB9F00FAD506 /* CoreGraphics.framework */,
@@ -189,6 +205,7 @@
 		417D368D17DABB9F00FAD506 /* Suggest */ = {
 			isa = PBXGroup;
 			children = (
+				41941BEB17DBC50500875F53 /* Vendor */,
 				416D617A17DB5269003B6726 /* Main.storyboard */,
 				416D616517DB5212003B6726 /* PAAppDelegate.h */,
 				416D616617DB5212003B6726 /* PAAppDelegate.m */,
@@ -196,12 +213,12 @@
 				416D616817DB5212003B6726 /* PAProfileViewController.m */,
 				416D616917DB5212003B6726 /* PASelectFriendViewController.h */,
 				416D616A17DB5212003B6726 /* PASelectFriendViewController.m */,
-				416D616B17DB5212003B6726 /* PASuggestionsViewController.h */,
-				416D616C17DB5212003B6726 /* PASuggestionsViewController.m */,
 				416D616D17DB5212003B6726 /* PASuggestViewController.h */,
 				416D616E17DB5212003B6726 /* PASuggestViewController.m */,
 				416D616F17DB5212003B6726 /* PAViewController.h */,
 				416D617017DB5212003B6726 /* PAViewController.m */,
+				41A5F5B017DBF27E00142279 /* PAProductsTableViewController.h */,
+				41A5F5B117DBF27E00142279 /* PAProductsTableViewController.m */,
 				416D618317DB539C003B6726 /* Images.xcassets */,
 				416D614517DB51FE003B6726 /* Resources */,
 				417D368E17DABB9F00FAD506 /* Supporting Files */,
@@ -219,6 +236,24 @@
 				416D616417DB5212003B6726 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		41941BEB17DBC50500875F53 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				41941BEC17DBC50500875F53 /* FFCircluarProgressView */,
+			);
+			name = Vendor;
+			path = Suggest/Vendor;
+			sourceTree = SOURCE_ROOT;
+		};
+		41941BEC17DBC50500875F53 /* FFCircluarProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				41941BED17DBC50500875F53 /* FFCircularProgressView.h */,
+				41941BEE17DBC50500875F53 /* FFCircularProgressView.m */,
+			);
+			path = FFCircluarProgressView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -304,19 +339,22 @@
 				416D617F17DB5319003B6726 /* Main.storyboard in Resources */,
 				416D617E17DB52D8003B6726 /* main.m in Resources */,
 				416D615717DB51FE003B6726 /* Sail-Regular.otf in Resources */,
-				416D615E17DB51FE003B6726 /* friends.png in Resources */,
 				416D615B17DB51FE003B6726 /* background@2x.png in Resources */,
 				416D618217DB538A003B6726 /* InfoPlist.strings in Resources */,
-				416D615F17DB51FE003B6726 /* friends@2x.png in Resources */,
+				41A5F5AC17DBE30B00142279 /* Default-568h@2x.png in Resources */,
 				416D615A17DB51FE003B6726 /* background.png in Resources */,
 				416D615817DB51FE003B6726 /* AppIcon60x60.png in Resources */,
 				416D618417DB539C003B6726 /* Images.xcassets in Resources */,
 				416D616317DB51FE003B6726 /* suggestion@2x.png in Resources */,
 				416D615D17DB51FE003B6726 /* facebook@2x.png in Resources */,
+				416D618B17DBB165003B6726 /* add.png in Resources */,
 				416D615917DB51FE003B6726 /* AppIcon60x60@2x.png in Resources */,
 				416D616217DB51FE003B6726 /* suggestion.png in Resources */,
 				416D615C17DB51FE003B6726 /* facebook.png in Resources */,
 				416D615617DB51FE003B6726 /* LeagueScriptNumberOne.otf in Resources */,
+				416D618717DBAD15003B6726 /* history.png in Resources */,
+				416D618C17DBB165003B6726 /* add@2x.png in Resources */,
+				416D618817DBAD15003B6726 /* history@2x.png in Resources */,
 				416D616017DB51FE003B6726 /* profile.png in Resources */,
 				416D616117DB51FE003B6726 /* profile@2x.png in Resources */,
 			);
@@ -336,12 +374,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41A5F5B217DBF27E00142279 /* PAProductsTableViewController.m in Sources */,
 				416D617617DB5212003B6726 /* PASuggestViewController.m in Sources */,
 				416D617117DB5212003B6726 /* main.m in Sources */,
-				416D617517DB5212003B6726 /* PASuggestionsViewController.m in Sources */,
 				416D617317DB5212003B6726 /* PAProfileViewController.m in Sources */,
 				416D617717DB5212003B6726 /* PAViewController.m in Sources */,
 				416D617417DB5212003B6726 /* PASelectFriendViewController.m in Sources */,
+				41941BEF17DBC50500875F53 /* FFCircularProgressView.m in Sources */,
 				416D617217DB5212003B6726 /* PAAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

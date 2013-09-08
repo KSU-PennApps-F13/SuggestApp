@@ -24,12 +24,8 @@
     
     self.logoLabel.font = [UIFont fontWithName:@"Sail-Regular" size:85.0];
     self.facebookLoginButton.layer.cornerRadius = 4.0f;
-    self.facebookLogo.layer.shadowColor = [UIColor colorWithWhite:0.1 alpha:1.0].CGColor;
-    self.facebookLogo.layer.shadowOffset = CGSizeMake(1.0, 1.0);
-    self.facebookLogo.layer.shadowRadius = 0.0;
-    self.facebookLogo.layer.shadowOpacity = 1.0;
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    self.facebookLoginButton.layer.borderWidth = 1.0f;
+    self.facebookLoginButton.layer.borderColor = [UIColor colorWithWhite:0.0 alpha:0.5].CGColor;
 }
 
 - (void)viewDidAppear:(BOOL)animated {

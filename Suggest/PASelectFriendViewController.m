@@ -7,18 +7,18 @@
 //
 
 #import "PASelectFriendViewController.h"
-#import "PASuggestionsViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
 
 @interface PASelectFriendViewController () <UISearchDisplayDelegate>
 
 @property (nonatomic, strong) NSArray *friends;
 @property (nonatomic, strong) NSMutableArray *searchResults;
-@property (nonatomic, weak) FBGraphObject<FBGraphUser> *selectedFriend;
 
 @end
 
 @implementation PASelectFriendViewController
+
+@synthesize delegate = _delegate;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -82,13 +82,16 @@
 
 # pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {    
+    FBGraphObject *friend;
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        self.selectedFriend = [self.searchResults objectAtIndex:indexPath.row];
-        [self performSegueWithIdentifier:@"FriendToSuggestionSegue" sender:self];
+        friend = [self.searchResults objectAtIndex:indexPath.row];
+    } else {
+        friend = [self.friends objectAtIndex:indexPath.row];
     }
+    
+    [self.delegate selectFriendViewController:self didSelectFriend:friend];
 }
 
 # pragma mark - Search display delegate
@@ -98,26 +101,13 @@
     return YES;
 }
 
-
-#pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if(!self.selectedFriend) {
-        self.selectedFriend = [self.friends objectAtIndex:self.tableView.indexPathForSelectedRow.row];
-    }
-    
-    PASuggestionsViewController *viewController = [segue destinationViewController];
-    [viewController setSelectedFriend:self.selectedFriend];
-    self.selectedFriend = nil;
-}
-
 - (void)populateFriends {
     if (FBSession.activeSession.isOpen) {
-        [[FBRequest requestForMyFriends] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        FBRequest *friendRequest = [FBRequest requestForGraphPath:@"me/friends?fields=name,profile_picture"];
+        [friendRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             if (!error) {
                 self.friends = [(NSArray *)[result objectForKey:@"data"] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                    return [((FBGraphObject<FBGraphUser> *) obj1).name compare:((FBGraphObject<FBGraphUser> *) obj2).name];
+                    return [[((FBGraphObject *) obj1) objectForKey:@"name"] compare:[((FBGraphObject *) obj2) objectForKey:@"name"]];
                 }];
                 self.searchResults = [NSMutableArray arrayWithCapacity:self.friends.count];
                 self.tableView.hidden = NO;
