@@ -9,6 +9,8 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import "PAProductsTableViewController.h"
 #import "FFCircularProgressView.h"
+#import "AFJSONRequestOperation.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface PAProductsTableViewController ()
 
@@ -45,6 +47,11 @@
     [self retrieveProducts];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.products = nil;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -76,29 +83,9 @@
     }
     
     Product *product = [self.products objectAtIndex:indexPath.row];
-    
-    if(product.image) {
-        cell.imageView.image = [UIImage imageWithData:product.image];
-        cell.imageView.layer.cornerRadius = 4.0;
-        cell.imageView.layer.masksToBounds = YES;
-    } else {
-        cell.imageView.image = nil;
-        dispatch_async(self.imageQueue, ^{
-            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:product.imageURL]];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                product.image = imageData;
-                cell.imageView.image = [UIImage imageWithData:imageData];
-                cell.imageView.layer.cornerRadius = 4.0;
-                cell.imageView.layer.masksToBounds = YES;
-                @try{
-                    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                }
-                @catch (NSException *exception) {   
-                }
-            });
-        });
-    }
-    
+    [cell.imageView setImageWithURL:[NSURL URLWithString:product.imageURL]];
+    cell.imageView.layer.cornerRadius = 4.0;
+    cell.imageView.layer.masksToBounds = YES;
     cell.textLabel.text = product.name;
     NSNumberFormatter *currencyStyle = [[NSNumberFormatter alloc] init];
     [currencyStyle setFormatterBehavior:NSNumberFormatterBehavior10_4];
@@ -115,83 +102,6 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:product.link]];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
- */
-
-#pragma mark - URL connection delegate
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    // A response has been received, this is where we initialize the instance var you created
-    // so that we can append data to it in the didReceiveData method
-    // Furthermore, this method is called each time there is a redirect so reinitializing it
-    // also serves to clear it
-    self.responseData = [[NSMutableData alloc] init];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [self.responseData appendData:data];
-}
-
-- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
-                  willCacheResponse:(NSCachedURLResponse*)cachedResponse {
-    // Return nil to indicate not necessary to store a cached response for this connection
-    return nil;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    NSError* error;
-    // The request is complete and data has been received
-    // You can parse the stuff in your instance variable now
-    NSArray* json = [NSJSONSerialization JSONObjectWithData:self.responseData options:NSJSONReadingMutableContainers error:&error];
-    
-    
-    NSManagedObjectContext *context = [self managedObjectContext];
-    if(json.count > 0) {
-        // Create new products.
-        for(NSDictionary *dict in json) {
-            Product *product = [NSEntityDescription insertNewObjectForEntityForName:@"Product" inManagedObjectContext:context];
-            product.name = dict[@"title"];
-            product.imageURL = dict[@"image"];
-            product.link = dict[@"link"];
-            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-            [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
-            product.price = [formatter numberFromString:dict[@"price"]];
-            product.suggestion = self.suggestion;
-        }
-        
-        self.suggestion.created = [NSDate dateWithTimeIntervalSinceNow:0];
-        
-        NSError *error = nil;
-        if (![context save:&error]) {
-            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-            return;
-        }
-        
-        [self retrieveProducts];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Opps!" message:@"Unable to get response from server." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [alert show];
-    }
-    
-    [self.circularProgressView removeFromSuperview];
-    self.circularProgressView = nil;
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    // The request has failed for some reason!
-    // Check the error var
-}
-
-
 - (void)retrieveInformation {
     self.circularProgressView = [[FFCircularProgressView alloc] initWithFrame:CGRectMake(0, 0, 50.0, 50.0)];
     self.circularProgressView.center = CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.bounds));
@@ -202,32 +112,60 @@
         FBRequest *friendRequest = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@%@", self.suggestion.facebookId, @"?fields=likes"]];
         [friendRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             if (!error) {
-                NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://pinch-app-prod.herokuapp.com/q"]];
-                request.HTTPMethod = @"POST";
-                [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-                
                 NSArray *likes = result[@"likes"][@"data"];
                 for(int i = 0; i < likes.count; i++) {
-                    [result[@"likes"][@"data"][i] removeObjectForKey:@"category"];
-                    [result[@"likes"][@"data"][i] removeObjectForKey:@"category_list"];
-                    [result[@"likes"][@"data"][i] removeObjectForKey:@"created_time"];
-                    [result[@"likes"][@"data"][i] removeObjectForKey:@"id"];
+                    [self queryServer:result[@"likes"][@"data"][i][@"name"]];
                 }
-                
-                [result[@"likes"] removeObjectForKey:@"paging"];
-                
-                if(result[@"likes"]) {
-                    NSData *data = [NSJSONSerialization dataWithJSONObject:result[@"likes"] options:NSJSONWritingPrettyPrinted error:&error];
-                    [request setHTTPBody:data];
-                    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
-                    NSLog(@"%@", connection.description);
-                } else {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Opps!" message:@"Your friend has no interesting information." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-                    [alert show];
-                }
+                self.suggestion.created = [NSDate dateWithTimeIntervalSinceNow:0];
             }
         }];
     }
+}
+
+- (void)queryServer:(NSString *)keyword {
+    NSError *error = nil;
+    NSDictionary *dict = [NSDictionary dictionaryWithObjects:@[keyword] forKeys:@[@"name"]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://pinch-app-prod.herokuapp.com/q"]];
+    request.HTTPMethod = @"POST";
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+    [request setHTTPBody:data];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSManagedObjectContext *context = [self managedObjectContext];
+        NSArray *json = JSON;
+        if(json.count > 0) {
+            NSArray *shopYourWay = json[0];
+            // Create new products.
+            for(NSDictionary *dictionary in shopYourWay) {
+                Product *product = [NSEntityDescription insertNewObjectForEntityForName:@"Product" inManagedObjectContext:context];
+                product.name = dictionary[@"title"];
+                product.imageURL = dictionary[@"image"];
+                product.link = dictionary[@"link"];
+                NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+                product.price = [formatter numberFromString:[NSString stringWithFormat:@"%@",dictionary[@"price"]]];
+                product.suggestion = self.suggestion;
+            }
+            
+            if(self.circularProgressView) {
+                [self.circularProgressView removeFromSuperview];
+                self.circularProgressView = nil;
+            }
+            
+            NSError *error = nil;
+            if (![context save:&error]) {
+                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+                return;
+            }
+            
+            [self retrieveProducts];
+        }
+        
+        
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"%@", error.localizedDescription);
+    }];
+    [operation start];
 }
 
 - (NSManagedObjectContext *)managedObjectContext {

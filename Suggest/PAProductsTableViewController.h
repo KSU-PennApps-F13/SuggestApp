@@ -10,7 +10,7 @@
 #import "Product.h"
 #import "Suggestion.h"
 
-@interface PAProductsTableViewController : UITableViewController <NSURLConnectionDelegate>
+@interface PAProductsTableViewController : UITableViewController
 
 @property (nonatomic, strong) Suggestion *suggestion;
 

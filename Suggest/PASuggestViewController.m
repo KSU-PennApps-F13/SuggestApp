@@ -165,13 +165,13 @@
     // Save the object to persistent store
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    } else {
+        [self dismissViewControllerAnimated:YES completion:^{
+            PAProductsTableViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestionsTableViewController"];
+            [viewController setSuggestion:suggestion];
+            [self.navigationController pushViewController:viewController animated:YES];
+        }];
     }
-    
-    [self dismissViewControllerAnimated:YES completion:^{
-        PAProductsTableViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestionsTableViewController"];
-        [viewController setSuggestion:suggestion];
-        [self.navigationController pushViewController:viewController animated:YES];
-    }];
 }
 
 - (IBAction)createSuggestionButtonClicked:(id)sender {
