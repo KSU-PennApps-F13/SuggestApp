@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Product.h"
+#import "Suggestion.h"
 
 @interface PAProductsTableViewController : UITableViewController <NSURLConnectionDelegate>
 
-@property (nonatomic, strong) FBGraphObject *selectedFriend;
+@property (nonatomic, strong) Suggestion *suggestion;
 
 @end

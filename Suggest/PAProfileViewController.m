@@ -11,6 +11,8 @@
 
 @interface PAProfileViewController ()
 
+@property (nonatomic, strong) FBGraphObject *user;
+
 @end
 
 @implementation PAProfileViewController
@@ -63,6 +65,11 @@
 #endif
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self retrieveSuggestions];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -83,9 +90,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 /* This is the main thread again, where we set the tableView's image to
                  be what we just fetched. */
-                self.profileImageView.image = img;
-                self.profileImageView.layer.cornerRadius = img.size.width/2.0/2.0;
-                self.profileImageView.layer.masksToBounds = YES;
+                [self.profilePictureButton setBackgroundImage:img forState:UIControlStateNormal];
+                self.profilePictureButton.layer.cornerRadius = img.size.width/2.0/2.0;
+                self.profilePictureButton.layer.masksToBounds = YES;
             });
         });
     }];
@@ -95,12 +102,10 @@
     if (FBSession.activeSession.isOpen) {
         FBRequest *selfRequest = [FBRequest requestForGraphPath:@"me"];
         [selfRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+            self.user = result;
             self.progressView.hidden = YES;
             self.profileNameLabel.text = [result objectForKey:@"name"];
             [self.profileWebsiteButton setTitle:[result objectForKey:@"website"] forState:UIControlStateNormal];
-            self.profileEmailLabel.text = [result objectForKey:@"email"];
-            self.profileBirthdayLabel.text = [result objectForKey:@"birthday"];
-            self.profileLocationLabel.text = [[result objectForKey:@"location"] objectForKey:@"name"];
             self.informationView.hidden = NO;
         }];
     }
@@ -109,4 +114,35 @@
 - (IBAction)logoutButtonClicked:(id)sender {
     [FBSession.activeSession closeAndClearTokenInformation];
 }
+
+- (IBAction)profilePictureButtonClicked:(id)sender {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fb://profile/%@", self.user[@"id"]]];
+    [[UIApplication sharedApplication] openURL:url];
+}
+
+- (IBAction)websiteButtonClicked:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@",self.user[@"website"]]]];
+}
+
+- (void)retrieveSuggestions {
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Suggestion"];
+    NSMutableArray *suggestions = [[context executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    
+    if(suggestions) {
+        self.numSuggestionsLabel.text = [NSString stringWithFormat:@"%d", suggestions.count];
+    } else {
+        self.numSuggestionsLabel.text = @"0";
+    }
+}
+
+- (NSManagedObjectContext *)managedObjectContext {
+    NSManagedObjectContext *context = nil;
+    id delegate = [[UIApplication sharedApplication] delegate];
+    if ([delegate performSelector:@selector(managedObjectContext)]) {
+        context = [delegate managedObjectContext];
+    }
+    return context;
+}
+
 @end

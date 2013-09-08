@@ -13,19 +13,21 @@
 
 @property (nonatomic, strong) NSMutableString *keywords;
 @property (nonatomic, strong) NSArray *products;
+@property (nonatomic, strong) NSMutableData *responseData;
+@property (nonatomic, strong) dispatch_queue_t imageQueue;
 
 @end
 
 @implementation PAProductsTableViewController
 
-@synthesize selectedFriend = _selectedFriend;
+@synthesize suggestion = _suggestion;
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithStyle:style];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         _keywords = [[NSMutableString alloc] init];
-        _products = [[NSArray alloc] init];
+        _imageQueue = dispatch_queue_create("com.camdenfullmer.Suggest.queue2", NULL);
     }
     return self;
 }
@@ -33,8 +35,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = [self.selectedFriend objectForKey:@"name"];
-    [self retrieveInformation];
+    self.title = self.suggestion.facebookName;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self retrieveProducts];
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,7 +52,7 @@
 #pragma mark - Table view data source
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 100;
+    return 80;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -63,52 +69,49 @@
 {
     static NSString *CellIdentifier = @"SuggestionCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    UIImageView *productImageView = (UIImageView *)[cell.contentView viewWithTag:10];
-    UILabel *nameLabel = (UILabel *)[cell.contentView viewWithTag:11];
-    UILabel *descriptionLabel = (UILabel *)[cell.contentView viewWithTag:12];
-    UILabel *priceLabel = (UILabel *)[cell.contentView viewWithTag:13];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    
+    Product *product = [self.products objectAtIndex:indexPath.row];
+    
+    if(product.image) {
+        cell.imageView.image = [UIImage imageWithData:product.image];
+        cell.imageView.layer.cornerRadius = 4.0;
+        cell.imageView.layer.masksToBounds = YES;
+    } else {
+        cell.imageView.image = nil;
+        dispatch_async(self.imageQueue, ^{
+            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:product.imageURL]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                product.image = imageData;
+                cell.imageView.image = [UIImage imageWithData:imageData];
+                cell.imageView.layer.cornerRadius = 4.0;
+                cell.imageView.layer.masksToBounds = YES;
+                @try{
+                    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                }
+                @catch (NSException *exception) {   
+                }
+            });
+        });
+    }
+    
+    cell.textLabel.text = product.name;
+    NSNumberFormatter *currencyStyle = [[NSNumberFormatter alloc] init];
+    [currencyStyle setFormatterBehavior:NSNumberFormatterBehavior10_4];
+    [currencyStyle setNumberStyle:NSNumberFormatterCurrencyStyle];
+    NSString *formatted = [currencyStyle stringFromNumber:product.price];
+    cell.detailTextLabel.text = formatted;
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    Product *product =[self.products objectAtIndex:indexPath.row];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:product.link]];
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 /*
 #pragma mark - Navigation
@@ -129,13 +132,11 @@
     // so that we can append data to it in the didReceiveData method
     // Furthermore, this method is called each time there is a redirect so reinitializing it
     // also serves to clear it
-    //_responseData = [[NSMutableData alloc] init];
+    self.responseData = [[NSMutableData alloc] init];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    NSError* error;
-    NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-    NSLog(@"%@", json);
+    [self.responseData appendData:data];
 }
 
 - (NSCachedURLResponse *)connection:(NSURLConnection *)connection
@@ -145,9 +146,39 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    NSError* error;
     // The request is complete and data has been received
     // You can parse the stuff in your instance variable now
+    NSArray* json = [NSJSONSerialization JSONObjectWithData:self.responseData options:NSJSONReadingMutableContainers error:&error];
     
+    
+    NSManagedObjectContext *context = [self managedObjectContext];
+    if(json && !error) {
+        // Create new products.
+        for(NSDictionary *dict in json) {
+            Product *product = [NSEntityDescription insertNewObjectForEntityForName:@"Product" inManagedObjectContext:context];
+            product.name = dict[@"title"];
+            product.imageURL = dict[@"image"];
+            product.link = dict[@"link"];
+            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+            [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+            product.price = [formatter numberFromString:dict[@"price"]];
+            product.suggestion = self.suggestion;
+        }
+        
+        self.suggestion.created = [NSDate dateWithTimeIntervalSinceNow:0];
+        
+        NSError *error = nil;
+        if (![context save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+            return;
+        }
+        
+        [self retrieveProducts];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Opps!" message:@"Unable to get response from server." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -158,22 +189,57 @@
 
 - (void)retrieveInformation {
     if (FBSession.activeSession.isOpen) {
-        FBRequest *friendRequest = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@%@", self.selectedFriend[@"id"], @"?fields=likes"]];
+        FBRequest *friendRequest = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@%@", self.suggestion.facebookId, @"?fields=likes"]];
         [friendRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             if (!error) {
-                NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://pinch-app.herokuapp.com/q"]];
-                request.HTTPMethod = @"POST";
-                [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-                NSData *data = [NSJSONSerialization dataWithJSONObject:result[@"likes"] options:NSJSONWritingPrettyPrinted error:&error];
-                if(data) {
-                    [request setHTTPBody:data];
+                NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://pinch-app-temp.herokuapp.com/"]];
+                request.HTTPMethod = @"GET";
+                //[request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                
+                for(FBGraphObject *object in result[@"likes"][@"data"]) {
+                    [object removeObjectForKey:@"category"];
+                        [object removeObjectForKey:@"category_list"];
+                    [object removeObjectForKey:@"created_time"];
+                    [object removeObjectForKey:@"id"];
+                }
+                [result[@"likes"] removeObjectForKey:@"paging"];
+                
+                /*if(result[@"likes"]) {
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:result[@"likes"] options:NSJSONWritingPrettyPrinted error:&error];
+                    [request setHTTPBody:data];*/
                     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
-                } else {
+                    NSLog(@"%@", connection.description);
+                /*} else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Opps!" message:@"Your friend has no interesting information." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
-                }
+                }*/
             }
         }];
+    }
+}
+
+- (NSManagedObjectContext *)managedObjectContext {
+    NSManagedObjectContext *context = nil;
+    id delegate = [[UIApplication sharedApplication] delegate];
+    if ([delegate performSelector:@selector(managedObjectContext)]) {
+        context = [delegate managedObjectContext];
+    }
+    return context;
+}
+
+- (void)retrieveProducts {
+    // Fetch the devices from persistent data store
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Product"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"suggestion == %@", self.suggestion];
+    [fetchRequest setPredicate:predicate];
+    self.products = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    
+    if(self.products.count > 0) {
+        [self.tableView reloadData];
+    }
+    else {
+        [self retrieveInformation];
     }
 }
 
