@@ -7,6 +7,7 @@
 //
 
 #import <FacebookSDK/FacebookSDK.h>
+#import <DropboxSDK/DropboxSDK.h>
 #import "PAProfileViewController.h"
 #import "CFShareCircleView.h"
 #import "CFSharer.h"
@@ -159,6 +160,7 @@
 }
 
 - (IBAction)logoutButtonClicked:(id)sender {
+    [[DBSession sharedSession] unlinkAll];
     [FBSession.activeSession closeAndClearTokenInformation];
 }
 
