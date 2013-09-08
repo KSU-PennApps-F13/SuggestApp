@@ -112,6 +112,8 @@
     if(suggestion.created) {
         TTTTimeIntervalFormatter *timeIntervalFormatter = [[TTTTimeIntervalFormatter alloc] init];
         cell.detailTextLabel.text = [NSString stringWithFormat:@"Created %@", [timeIntervalFormatter stringForTimeInterval:[suggestion.created timeIntervalSinceNow]]];
+    } else {
+        cell.detailTextLabel.text = @"";
     }
     
     if (suggestion.facebookPicture) {

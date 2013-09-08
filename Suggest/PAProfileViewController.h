@@ -19,5 +19,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *profilePictureButton;
 - (IBAction)websiteButtonClicked:(id)sender;
 @property (strong, nonatomic) IBOutlet UILabel *numSuggestionsLabel;
+@property (strong, nonatomic) IBOutlet UILabel *numUpcomingBirthdaysLabel;
+@property (strong, nonatomic) IBOutlet UILabel *numFriendsLabel;
 
 @end

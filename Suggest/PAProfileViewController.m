@@ -35,6 +35,9 @@
 	// Do any additional setup after loading the view.
     [self populateInformation];
     [self populateProfilePicture];
+    [self popualteBirthdays];
+    [self populateFriends];
+    self.informationView.contentSize = self.informationView.frame.size;
     
 #ifdef SCREENSHOTMODE
     self.navigationItem.leftBarButtonItem = nil;
@@ -93,6 +96,8 @@
                 [self.profilePictureButton setBackgroundImage:img forState:UIControlStateNormal];
                 self.profilePictureButton.layer.cornerRadius = img.size.width/2.0/2.0;
                 self.profilePictureButton.layer.masksToBounds = YES;
+                self.profilePictureButton.layer.borderColor = [UIColor blackColor].CGColor;
+                self.profilePictureButton.layer.borderWidth = 0.5;
             });
         });
     }];
@@ -109,6 +114,43 @@
             self.informationView.hidden = NO;
         }];
     }
+}
+
+- (void)popualteBirthdays {
+    if (FBSession.activeSession.isOpen) {
+        // Query to fetch the active user's friends, limit to 25.
+        NSString *query =
+        @"SELECT birthday_date "
+        @"FROM user "
+        @"WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) "
+        @"AND strlen(birthday_date) != 0 "
+        @"AND ((substr(birthday_date, 0, 2) = '09' "
+        @"AND substr(birthday_date, 3, 5) >= '7') "
+        @"OR (substr(birthday_date, 0, 2) = '10' "
+        @"AND substr(birthday_date, 3, 5) < '7'))";
+        // Set up the query parameter
+        NSDictionary *queryParam = @{ @"q": query };
+        // Make the API request that uses FQL
+        [FBRequestConnection startWithGraphPath:@"/fql"
+                                     parameters:queryParam
+                                     HTTPMethod:@"GET"
+                              completionHandler:^(FBRequestConnection *connection,
+                                                  id result,
+                                                  NSError *error) {
+                                  if (error) {
+                                      NSLog(@"Error: %@", [error localizedDescription]);
+                                  } else {
+                                      self.numUpcomingBirthdaysLabel.text = [NSString stringWithFormat:@"%d",((NSArray *)result[@"data"]).count];
+                                  }
+                              }];
+    }
+}
+
+- (void)populateFriends {
+    FBRequest *selfRequest = [FBRequest requestForGraphPath:@"me/friends"];
+    [selfRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        self.numFriendsLabel.text = [NSString stringWithFormat:@"%d",((NSArray *)result[@"data"]).count];
+    }];
 }
 
 - (IBAction)logoutButtonClicked:(id)sender {

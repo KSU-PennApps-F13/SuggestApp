@@ -8,6 +8,7 @@
 
 #import <FacebookSDK/FacebookSDK.h>
 #import "PAProductsTableViewController.h"
+#import "FFCircularProgressView.h"
 
 @interface PAProductsTableViewController ()
 
@@ -15,6 +16,7 @@
 @property (nonatomic, strong) NSArray *products;
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic, strong) dispatch_queue_t imageQueue;
+@property (nonatomic, strong) FFCircularProgressView *circularProgressView;
 
 @end
 
@@ -153,7 +155,7 @@
     
     
     NSManagedObjectContext *context = [self managedObjectContext];
-    if(json && !error) {
+    if(json.count > 0) {
         // Create new products.
         for(NSDictionary *dict in json) {
             Product *product = [NSEntityDescription insertNewObjectForEntityForName:@"Product" inManagedObjectContext:context];
@@ -179,6 +181,9 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Opps!" message:@"Unable to get response from server." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
     }
+    
+    [self.circularProgressView removeFromSuperview];
+    self.circularProgressView = nil;
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -188,31 +193,38 @@
 
 
 - (void)retrieveInformation {
+    self.circularProgressView = [[FFCircularProgressView alloc] initWithFrame:CGRectMake(0, 0, 50.0, 50.0)];
+    self.circularProgressView.center = CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.bounds));
+    [self.tableView addSubview:self.circularProgressView];
+    [self.circularProgressView startSpinProgressBackgroundLayer];    
+    
     if (FBSession.activeSession.isOpen) {
         FBRequest *friendRequest = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@%@", self.suggestion.facebookId, @"?fields=likes"]];
         [friendRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             if (!error) {
-                NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://pinch-app-temp.herokuapp.com/"]];
-                request.HTTPMethod = @"GET";
-                //[request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://pinch-app-prod.herokuapp.com/q"]];
+                request.HTTPMethod = @"POST";
+                [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
                 
-                for(FBGraphObject *object in result[@"likes"][@"data"]) {
-                    [object removeObjectForKey:@"category"];
-                        [object removeObjectForKey:@"category_list"];
-                    [object removeObjectForKey:@"created_time"];
-                    [object removeObjectForKey:@"id"];
+                NSArray *likes = result[@"likes"][@"data"];
+                for(int i = 0; i < likes.count; i++) {
+                    [result[@"likes"][@"data"][i] removeObjectForKey:@"category"];
+                    [result[@"likes"][@"data"][i] removeObjectForKey:@"category_list"];
+                    [result[@"likes"][@"data"][i] removeObjectForKey:@"created_time"];
+                    [result[@"likes"][@"data"][i] removeObjectForKey:@"id"];
                 }
+                
                 [result[@"likes"] removeObjectForKey:@"paging"];
                 
-                /*if(result[@"likes"]) {
+                if(result[@"likes"]) {
                     NSData *data = [NSJSONSerialization dataWithJSONObject:result[@"likes"] options:NSJSONWritingPrettyPrinted error:&error];
-                    [request setHTTPBody:data];*/
+                    [request setHTTPBody:data];
                     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
                     NSLog(@"%@", connection.description);
-                /*} else {
+                } else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Opps!" message:@"Your friend has no interesting information." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
-                }*/
+                }
             }
         }];
     }

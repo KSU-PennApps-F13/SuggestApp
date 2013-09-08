@@ -29,7 +29,7 @@
         self.backgroundColor = [UIColor clearColor];
         
         _lineWidth = self.frame.size.width * 0.025;
-        _tintColor = [UIColor blueColor];
+        _tintColor = [UIColor colorWithRed:217.0/255.0 green:41.0/255.0 blue:50.0/255.0 alpha:1.0];
         
         self.progressBackgroundLayer = [CAShapeLayer layer];
         _progressBackgroundLayer.strokeColor = _tintColor.CGColor;
